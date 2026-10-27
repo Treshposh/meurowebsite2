@@ -368,7 +368,8 @@ to authenticated;
 -- Live play: private Realtime channels for signed-in players only.
 -- Topics used by the game: market:<n> (the shared market) and race:<code>.
 -- =====================================================================
-alter table realtime.messages enable row level security;
+-- Supabase already switches on row level security for realtime.messages, and only its
+-- internal owner may alter that table, so only the policies are set here.
 drop policy if exists "meuro riders can listen" on realtime.messages;
 create policy "meuro riders can listen" on realtime.messages for select to authenticated
   using (realtime.topic() ~ '^(market:[0-9]{1,2}|race:[a-z0-9-]{3,31})$');
